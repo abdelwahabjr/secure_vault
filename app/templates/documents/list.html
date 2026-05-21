@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}My Documents{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="fas fa-folder-open me-2"></i>Documents</h3>
+    <a href="{{ url_for('documents.upload') }}" class="btn btn-primary"><i class="fas fa-upload me-2"></i>Upload New</a>
+</div>
+{% if documents %}
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr><th>File</th><th>Size</th><th>Uploaded</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for doc in documents %}
+                    <tr>
+                        <td><i class="fas fa-file me-2 text-muted"></i>{{ doc.original_filename }}</td>
+                        <td><small>{{ (doc.file_size / 1024)|round(1) }} KB</small></td>
+                        <td><small>{{ doc.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</small></td>
+                        <td>
+                            <span class="badge bg-success"><i class="fas fa-lock"></i> Encrypted</span>
+                            {% if doc.is_verified %}<span class="badge bg-primary ms-1"><i class="fas fa-check"></i> Verified</span>{% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('documents.download', doc_id=doc.id) }}" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-download"></i></a>
+                            <a href="{{ url_for('documents.verify', doc_id=doc.id) }}" class="btn btn-sm btn-outline-success me-1"><i class="fas fa-check-circle"></i></a>
+                            <a href="{{ url_for('documents.metadata', doc_id=doc.id) }}" class="btn btn-sm btn-outline-info me-1"><i class="fas fa-info-circle"></i></a>
+                            <form method="POST" action="{{ url_for('documents.delete', doc_id=doc.id) }}" style="display:inline" onsubmit="return confirm('Delete this document?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card"><div class="card-body text-center py-5">
+    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+    <h5>No documents yet</h5>
+    <a href="{{ url_for('documents.upload') }}" class="btn btn-primary mt-2">Upload your first document</a>
+</div></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}2FA Verification{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header text-center py-3">
+                <h4 class="mb-0"><i class="fas fa-mobile-alt me-2"></i>Two-Factor Auth</h4>
+            </div>
+            <div class="card-body p-4 text-center">
+                <p class="text-muted">Enter the 6-digit code from your authenticator app.</p>
+                <form method="POST">
+                    <div class="mb-3">
+                        <input type="text" name="token" class="form-control form-control-lg text-center"
+                               maxlength="6" pattern="\d{6}" required autofocus placeholder="000000">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-check me-2"></i>Verify
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

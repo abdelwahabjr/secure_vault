@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Register - SecureVault{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header text-center py-3">
+                <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Create Account</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" id="regForm">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" name="username" class="form-control" required minlength="3">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" name="password" id="pwd" class="form-control"
+                                   required oninput="checkPolicy(this.value)">
+                        </div>
+                        <!-- Password Policy Checklist -->
+                        <div class="mt-2 p-2 bg-light rounded" id="policyBox">
+                            <small class="d-block" id="p1"><i class="fas fa-times-circle text-danger me-1"></i>At least 8 characters</small>
+                            <small class="d-block" id="p2"><i class="fas fa-times-circle text-danger me-1"></i>Uppercase letter (A-Z)</small>
+                            <small class="d-block" id="p3"><i class="fas fa-times-circle text-danger me-1"></i>Lowercase letter (a-z)</small>
+                            <small class="d-block" id="p4"><i class="fas fa-times-circle text-danger me-1"></i>Number (0-9)</small>
+                            <small class="d-block" id="p5"><i class="fas fa-times-circle text-danger me-1"></i>Special character (!@#$...)</small>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" name="confirm_password" id="confirm" class="form-control"
+                                   required oninput="checkMatch()">
+                        </div>
+                        <small id="matchMsg" class="text-danger d-none">Passwords do not match</small>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+                    </div>
+                </form>
+                <hr>
+                <p class="text-center mb-0">
+                    Already have an account? <a href="{{ url_for('auth.login') }}">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function checkPolicy(v) {
+    const checks = [
+        { id: 'p1', ok: v.length >= 8 },
+        { id: 'p2', ok: /[A-Z]/.test(v) },
+        { id: 'p3', ok: /[a-z]/.test(v) },
+        { id: 'p4', ok: /\d/.test(v) },
+        { id: 'p5', ok: /[!@#$%^&*(),.?":{}|<>]/.test(v) },
+    ];
+    checks.forEach(c => {
+        const el = document.getElementById(c.id);
+        el.innerHTML = c.ok
+            ? `<i class="fas fa-check-circle text-success me-1"></i>${el.textContent.trim()}`
+            : `<i class="fas fa-times-circle text-danger me-1"></i>${el.textContent.trim()}`;
+    });
+}
+function checkMatch() {
+    const msg = document.getElementById('matchMsg');
+    const match = document.getElementById('pwd').value === document.getElementById('confirm').value;
+    msg.classList.toggle('d-none', match);
+}
+</script>
+{% endblock %}

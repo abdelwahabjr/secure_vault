@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Setup 2FA{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header text-center py-3">
+                <h4 class="mb-0"><i class="fas fa-qrcode me-2"></i>Setup Two-Factor Authentication</h4>
+            </div>
+            <div class="card-body p-4 text-center">
+                <p>Scan this QR code with <strong>Google Authenticator</strong> or <strong>Authy</strong>:</p>
+                <img src="data:image/png;base64,{{ qr_code }}" class="img-fluid mb-3" style="max-width:200px">
+                <p class="text-muted small">Manual key: <code>{{ secret }}</code></p>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Enter the 6-digit code to confirm:</label>
+                        <input type="text" name="token" class="form-control text-center"
+                               maxlength="6" pattern="\d{6}" required placeholder="000000">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check me-2"></i>Enable 2FA
+                        </button>
+                    </div>
+                </form>
+                {% if current_user.is_2fa_enabled %}
+                <hr>
+                <form method="POST" action="{{ url_for('auth.disable_2fa') }}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Disable 2FA</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

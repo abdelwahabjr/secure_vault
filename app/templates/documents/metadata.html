@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Document Metadata{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="fas fa-info-circle me-2"></i>Document Metadata</h3>
+<div class="card">
+    <div class="card-header">{{ doc.original_filename }}</div>
+    <div class="card-body">
+        <table class="table">
+            <tr><th>Original Filename</th><td>{{ doc.original_filename }}</td></tr>
+            <tr><th>File Size</th><td>{{ (doc.file_size / 1024)|round(2) }} KB</td></tr>
+            <tr><th>File Type</th><td>{{ doc.file_type }}</td></tr>
+            <tr><th>Encrypted</th><td><span class="badge bg-success">Yes (AES-256)</span></td></tr>
+            <tr><th>SHA-256 Hash</th><td><code class="small">{{ doc.sha256_hash }}</code></td></tr>
+            <tr><th>Digital Signature</th><td><code class="small">{{ doc.digital_signature[:64] }}...</code></td></tr>
+            <tr><th>Uploaded At</th><td>{{ doc.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</td></tr>
+            <tr><th>Last Accessed</th><td>{{ doc.last_accessed.strftime('%Y-%m-%d %H:%M:%S') if doc.last_accessed else 'Never' }}</td></tr>
+            <tr><th>Verified</th><td>{% if doc.is_verified %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">Not Yet</span>{% endif %}</td></tr>
+        </table>
+        <a href="{{ url_for('documents.list_documents') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+        <a href="{{ url_for('documents.verify', doc_id=doc.id) }}" class="btn btn-success ms-2">
+            <i class="fas fa-check-circle me-1"></i>Verify Now
+        </a>
+    </div>
+</div>
+{% endblock %}
